@@ -1,0 +1,15 @@
+apply plugin: 'java'
+
+repositories {
+    mavenLocal()
+	mavenCentral()
+}
+
+dependencies {
+    compile 'io.netty:netty-all:4.0.+'
+    testCompile 'org.testng:testng:+'
+}
+
+test {
+	useTestNG()
+}
