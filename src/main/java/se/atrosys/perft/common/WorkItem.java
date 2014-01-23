@@ -1,15 +1,15 @@
 package se.atrosys.perft.common;
 
-import java.net.URL;
+import java.net.URI;
 
 public class WorkItem {
-	private final URL url;
+	private final URI uri;
 
-	public WorkItem(URL url) {
-		this.url = url;
+	public WorkItem(URI uri) {
+		this.uri = uri;
 	}
 
-	public URL getUrl() {
-		return url;
+	public URI getUri() {
+		return uri;
 	}
 }

@@ -7,6 +7,11 @@ repositories {
 
 dependencies {
     compile 'io.netty:netty-all:4.0.+'
+    compile 'ch.qos.logback:logback-core:+'
+    compile 'ch.qos.logback:logback-classic:+'
+    compile 'org.slf4j:slf4j-api:+'
+    compile 'org.apache.httpcomponents:httpclient:4.3.+'
+    compile 'joda-time:joda-time:+'
     testCompile 'org.testng:testng:+'
 }
 
