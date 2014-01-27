@@ -9,7 +9,7 @@ import java.util.List;
 public class AccessLogConverterTest {
 	@Test
 	public void shouldConvertMinorAccessLog() throws IOException {
-		List<AccessLogConverter.AccessLogItem> list = new AccessLogConverter().parseLog("accesslog");
+		List<AccessLogConverterImpl.AccessLogItem> list = new AccessLogConverterImpl().parseLog("accesslog");
 
 		Assert.assertNotNull(list);
 		Assert.assertNotEquals(list.size(), 0);

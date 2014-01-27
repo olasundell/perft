@@ -22,7 +22,7 @@ public class Worker {
 		Result result = new Result();
 
 		try {
-			logger.info(String.format("Getting %s", workItem.getUri().toString()));
+			logger.debug(String.format("Getting %s", workItem.getUri().toString()));
 
 			StringBuilder builder = new StringBuilder();
 			CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -36,8 +36,14 @@ public class Worker {
 
 			long endTime = System.currentTimeMillis();
 
-			result.setTime(new Duration(startTime, endTime).getMillis());
+			result.setStartTime(startTime);
+			result.setEndTime(endTime);
 			result.setStatusCode(response1.getStatusLine().getStatusCode());
+			if (result.getStatusCode() != 200 ) {
+				logger.warn(String.format("Did a request to %s, but got status code %d",
+						workItem.getUri().toString(),
+						result.getStatusCode()));
+			}
 
 			logger.debug("Finished!");
 			logger.trace(builder.toString());

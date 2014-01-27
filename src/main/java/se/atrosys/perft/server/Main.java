@@ -22,7 +22,7 @@ public class Main {
 //			e.printStackTrace();
 //		}
 
-		List<WorkItem> workItems = new WorkItemListFactory().produceWorkItems();
+		List<WorkItem> workItems = new WorkItemListFactory("accesslog").produceWorkItems();
 		List<Result> results = new ArrayList<Result>();
 
 		for (WorkItem item: workItems) {

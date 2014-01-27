@@ -1,15 +1,12 @@
 package se.atrosys.perft.common;
 
 public class Result {
-	private long time;
 	private int statusCode;
+	private long endTime;
+	private long startTime;
 
 	public long getTime() {
-		return time;
-	}
-
-	public void setTime(long time) {
-		this.time = time;
+		return endTime - startTime;
 	}
 
 	public int getStatusCode() {
@@ -18,5 +15,21 @@ public class Result {
 
 	public void setStatusCode(int statusCode) {
 		this.statusCode = statusCode;
+	}
+
+	public void setEndTime(long endTime) {
+		this.endTime = endTime;
+	}
+
+	public long getEndTime() {
+		return endTime;
+	}
+
+	public void setStartTime(long startTime) {
+		this.startTime = startTime;
+	}
+
+	public long getStartTime() {
+		return startTime;
 	}
 }

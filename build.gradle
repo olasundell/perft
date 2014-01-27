@@ -12,6 +12,7 @@ dependencies {
     compile 'org.slf4j:slf4j-api:+'
     compile 'org.apache.httpcomponents:httpclient:4.3.+'
     compile 'joda-time:joda-time:+'
+    compile group:"com.netflix.rxjava", name:"rxjava-core", version:"+"
     testCompile 'org.testng:testng:+'
 }
 

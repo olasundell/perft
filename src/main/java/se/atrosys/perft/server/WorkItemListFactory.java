@@ -8,13 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkItemListFactory {
+	private final String accessLogFileName;
+	private AccessLogConverter accessLogConverter = new AccessLogConverterImpl();
+
+	public WorkItemListFactory(String accessLogFileName) {
+		this.accessLogFileName = accessLogFileName;
+	}
+
 	public List<WorkItem> produceWorkItems() throws IOException {
 		List<WorkItem> workItems = new ArrayList<WorkItem>();
 
-		AccessLogConverter accessLogConverter = new AccessLogConverter();
 		WorkItemFactory workItemFactory = new WorkItemFactory();
 
-		for (AccessLogConverter.AccessLogItem item: accessLogConverter.parseLog("accesslog")) {
+		for (AccessLogConverterImpl.AccessLogItem item: accessLogConverter.parseLog(accessLogFileName)) {
 			workItems.add(workItemFactory.convert(item));
 		}
 
@@ -23,13 +29,17 @@ public class WorkItemListFactory {
 
 	class WorkItemFactory {
 
-		public WorkItem convert(AccessLogConverter.AccessLogItem item) {
+		public WorkItem convert(AccessLogConverterImpl.AccessLogItem item) {
 			URI uri = URI.create(item.getRequest());
 			if (!uri.isAbsolute()) {
 				// TODO this should be configurable
-				uri = URI.create("http://localhost:8080" + uri.toString());
+				uri = URI.create("http://localhost:9000" + uri.toString());
 			}
 			return new WorkItem(uri);
 		}
+	}
+
+	public void setAccessLogConverter(AccessLogConverter accessLogConverter) {
+		this.accessLogConverter = accessLogConverter;
 	}
 }
