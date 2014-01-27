@@ -53,6 +53,7 @@ public class Worker {
 			httpClient.close();
 		} catch (IOException e) {
 			logger.error("Could not get content from URL", e);
+			result.markAsFailed();
 		}
 
 		return result;

@@ -4,6 +4,7 @@ public class Result {
 	private int statusCode;
 	private long endTime;
 	private long startTime;
+	private boolean failed;
 
 	public long getTime() {
 		return endTime - startTime;
@@ -31,5 +32,13 @@ public class Result {
 
 	public long getStartTime() {
 		return startTime;
+	}
+
+	public void markAsFailed() {
+		this.failed = true;
+	}
+	
+	public boolean isFailed() {
+		return failed;
 	}
 }

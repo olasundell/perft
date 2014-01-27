@@ -20,6 +20,10 @@ public class WorkerTest {
 		workItem = new WorkItem(URI.create("http://localhost:8080"));
 		worker = new Worker();
 		result = worker.work(workItem);
+		
+		if (result.isFailed()) {
+			// TODO skip tests.
+		}
 	}
 	@Test
 	public void shouldReturnContent() throws MalformedURLException {
