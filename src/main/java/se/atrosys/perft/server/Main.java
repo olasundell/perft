@@ -1,6 +1,7 @@
 package se.atrosys.perft.server;
 
 import se.atrosys.perft.client.Worker;
+import se.atrosys.perft.client.WorkerSpawner;
 import se.atrosys.perft.common.Result;
 import se.atrosys.perft.common.WorkItem;
 
@@ -9,7 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-	public static void main(String[] args) throws IOException {
+	public static boolean finished = false;
+
+	public static void main(String[] args) throws IOException, InterruptedException {
 //		int port;
 //		if (args.length > 0) {
 //			port = Integer.parseInt(args[0]);
@@ -25,10 +28,14 @@ public class Main {
 		List<WorkItem> workItems = new WorkItemListFactory("accesslog").produceWorkItems();
 		List<Result> results = new ArrayList<Result>();
 
-		for (WorkItem item: workItems) {
-			results.add(new Worker().work(item));
+		results.addAll(new WorkerSpawner().workOnItems(workItems, 100));
+
+		int count = 0;
+
+		while (!finished && count++ < 1000) {
+			Thread.sleep(100);
 		}
 
-		new ResultSummarizer().summarize(results);
+//		new ResultSummarizer().summarize(results);
 	}
 }

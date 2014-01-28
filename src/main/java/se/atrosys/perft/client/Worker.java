@@ -1,8 +1,10 @@
 package se.atrosys.perft.client;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -17,11 +19,20 @@ import java.io.InputStreamReader;
 
 public class Worker {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
-	private final StringBuilder builder;
+	private final StringBuilder builder = new StringBuilder();
 	private CloseableHttpClient httpClient;
 
+	public Worker(CloseableHttpClient httpClient) {
+		this.httpClient = httpClient;
+	}
+
+	public Worker(HttpClientConnectionManager manager) {
+		httpClient = HttpClients.custom()
+				.setConnectionManager(manager)
+				.build();
+	}
+
 	public Worker() {
-		builder = new StringBuilder();
 		httpClient = HttpClients.createDefault();
 	}
 
@@ -59,7 +70,6 @@ public class Worker {
 
 			response1.close();
 			httpGet.completed();
-			httpClient.close();
 		} catch (IOException e) {
 			logger.error("Could not get content from URL", e);
 			result.markAsFailed();
