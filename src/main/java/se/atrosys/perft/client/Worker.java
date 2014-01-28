@@ -17,6 +17,17 @@ import java.io.InputStreamReader;
 
 public class Worker {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final StringBuilder builder;
+	private CloseableHttpClient httpClient;
+
+	public Worker() {
+		builder = new StringBuilder();
+		httpClient = HttpClients.createDefault();
+	}
+
+	public void setHttpClient(CloseableHttpClient httpClient) {
+		this.httpClient = httpClient;
+	}
 
 	public Result work(WorkItem workItem) {
 		Result result = new Result();
@@ -24,8 +35,6 @@ public class Worker {
 		try {
 			logger.debug(String.format("Getting %s", workItem.getUri().toString()));
 
-			StringBuilder builder = new StringBuilder();
-			CloseableHttpClient httpClient = HttpClients.createDefault();
 			HttpGet httpGet = new HttpGet(workItem.getUri());
 
 			long startTime = System.currentTimeMillis();

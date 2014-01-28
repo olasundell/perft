@@ -13,6 +13,7 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.3.+'
     compile 'joda-time:joda-time:+'
     compile group:"com.netflix.rxjava", name:"rxjava-core", version:"+"
+    testCompile 'com.googlecode.jmockit:jmockit:+'
     testCompile 'org.testng:testng:+'
 }
 

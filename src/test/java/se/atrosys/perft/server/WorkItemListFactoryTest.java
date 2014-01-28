@@ -26,7 +26,7 @@ public class WorkItemListFactoryTest {
 				return new ArrayList<AccessLogItem>();
 			}
 		});
-		
+
 		List<WorkItem> list = factory.produceWorkItems();
 
 		Assert.assertNotNull(list);
