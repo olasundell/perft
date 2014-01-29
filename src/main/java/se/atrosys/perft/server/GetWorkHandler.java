@@ -8,23 +8,29 @@ import se.atrosys.perft.common.WorkerConfig;
 
 import java.util.List;
 
-public class WorkerServerHandler extends ChannelInboundHandlerAdapter {
+public class GetWorkHandler extends SimpleChannelInboundHandler<Operation> {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final WorkerConfig workerConfig;
 
-	public WorkerServerHandler(WorkerConfig workerConfig) {
+	public GetWorkHandler(WorkerConfig workerConfig) {
 		this.workerConfig = workerConfig;
 	}
 
 	@Override
-	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+	protected void channelRead0(final ChannelHandlerContext context, Operation currentOperation) throws Exception {
+		logger.info("Channel read, with operation " + currentOperation);
 
+		logger.info("Acting on operation");
+		switch (currentOperation) {
+			case GET_WORK:
+				sendWorkToClient(context);
+				break;
+			default:
+				logger.error("Unknown error with operation {}", currentOperation);
+		}
 	}
 
-	@Override
-	public void channelActive(final ChannelHandlerContext context) { // (1)
-		logger.info("Channel active!");
-
+	private void sendWorkToClient(final ChannelHandlerContext context) {
 		final ChannelFuture channelFuture = context.writeAndFlush(workerConfig); // (3)
 
 		channelFuture.addListener(new ChannelFutureListener() {
@@ -34,6 +40,13 @@ public class WorkerServerHandler extends ChannelInboundHandlerAdapter {
 				context.close();
 			}
 		}); // (4)
+	}
+
+	@Override
+	public void channelActive(final ChannelHandlerContext context) { // (1)
+		logger.info("Channel active!");
+
+		context.read();
 	}
 
 	@Override

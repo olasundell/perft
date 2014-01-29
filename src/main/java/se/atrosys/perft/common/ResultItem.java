@@ -1,6 +1,8 @@
 package se.atrosys.perft.common;
 
-public class Result {
+import java.io.Serializable;
+
+public class ResultItem implements Serializable {
 	private int statusCode;
 	private long endTime;
 	private long startTime;

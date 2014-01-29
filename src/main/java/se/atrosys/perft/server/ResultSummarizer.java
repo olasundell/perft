@@ -1,15 +1,14 @@
 package se.atrosys.perft.server;
 
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.atrosys.perft.common.Result;
+import se.atrosys.perft.common.ResultItem;
 
 import java.util.List;
 
 public class ResultSummarizer {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
-	public void summarize(List<Result> results) {
+	public void summarize(List<ResultItem> resultItems) {
 		int noOfOK = 0;
 		int totalTimeSpent = 0;
 		long first=Long.MAX_VALUE;
@@ -17,24 +16,24 @@ public class ResultSummarizer {
 
 
 
-		for (Result result: results) {
-			if (result.getStartTime() < first) {
-				first = result.getStartTime();
+		for (ResultItem resultItem : resultItems) {
+			if (resultItem.getStartTime() < first) {
+				first = resultItem.getStartTime();
 			}
 
-			if (result.getEndTime() > last) {
-				last = result.getEndTime();
+			if (resultItem.getEndTime() > last) {
+				last = resultItem.getEndTime();
 			}
 
-			if (result.getStatusCode() == 200) {
+			if (resultItem.getStatusCode() == 200) {
 				noOfOK++;
 			}
 
-			totalTimeSpent += result.getTime();
+			totalTimeSpent += resultItem.getTime();
 		}
 
-		logger.info(String.format("Average time: %d ms", totalTimeSpent / results.size()));
-		logger.info(String.format("No of requests: %d No of OK requests: %d", results.size(), noOfOK));
-		logger.info(String.format("No of requests per second: %d", (results.size() * 1000) / (last - first)));
+		logger.info(String.format("Average time: %d ms", totalTimeSpent / resultItems.size()));
+		logger.info(String.format("No of requests: %d No of OK requests: %d", resultItems.size(), noOfOK));
+		logger.info(String.format("No of requests per second: %d", (resultItems.size() * 1000) / (last - first)));
 	}
 }

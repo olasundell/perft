@@ -2,18 +2,19 @@ package se.atrosys.perft.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.atrosys.perft.client.Worker;
-import se.atrosys.perft.client.WorkerSpawner;
-import se.atrosys.perft.common.Result;
+import se.atrosys.perft.common.ResultItem;
 import se.atrosys.perft.common.WorkItem;
 import se.atrosys.perft.common.WorkerConfig;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Main {
 	public static boolean finished = false;
+	public static Map<Integer, List<ResultItem>> results = new ConcurrentHashMap<Integer, List<ResultItem>>();
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		Logger logger = LoggerFactory.getLogger(Main.class);
@@ -24,7 +25,7 @@ public class Main {
 				.withPrependToPath("/liveapi")
 				.build();
 
-		List<WorkItem> workItems = new WorkItemListFactory().produceWorkItems("accesslog2", workerConfig);
+		List<WorkItem> workItems = new WorkItemListFactory().produceWorkItems("accesslog", workerConfig);
 		workerConfig.addWorkItems(workItems);
 
 		int port;
@@ -39,16 +40,13 @@ public class Main {
 			logger.error("Error!", e);
 		}
 
-		List<Result> results = new ArrayList<Result>();
-
-//		results.addAll(new WorkerSpawner().workOnItems(workItems, 100));
-//
 //		int count = 0;
 //
-//		while (!finished && count++ < 1000) {
-//			Thread.sleep(100);
+//		while (!finished && count++ < 40) {
+//			logger.info("Waiting for results.");
+//			Thread.sleep(500);
 //		}
 
-//		new ResultSummarizer().summarize(results);
+		new ResultSummarizer().summarize(results.get(0));
 	}
 }

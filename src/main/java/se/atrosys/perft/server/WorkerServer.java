@@ -5,14 +5,12 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.atrosys.perft.common.WorkItem;
 import se.atrosys.perft.common.WorkerConfig;
-
-import java.util.List;
 
 public class WorkerServer {
 
@@ -36,8 +34,9 @@ public class WorkerServer {
 						public void initChannel(SocketChannel ch) throws Exception {
 							ch.pipeline()
 									.addLast(new ObjectEncoder())
-									.addLast(new ObjectDecoder(null))
-									.addLast(new WorkerServerHandler(workerConfig));
+									.addLast(new ObjectDecoder(ClassResolvers.softCachingResolver(ClassLoader.getSystemClassLoader())))
+									.addLast(new GetWorkHandler(workerConfig))
+									.addLast(new SendResultsHandler());
 						}
 					})
 					.option(ChannelOption.SO_BACKLOG, 128)          // (5)

@@ -1,17 +1,13 @@
 package se.atrosys.perft.client;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import org.joda.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.atrosys.perft.common.Result;
+import se.atrosys.perft.common.ResultItem;
 import se.atrosys.perft.common.WorkItem;
 
 import java.io.IOException;
@@ -40,8 +36,8 @@ public class Worker {
 		this.httpClient = httpClient;
 	}
 
-	public Result work(WorkItem workItem) {
-		Result result = new Result();
+	public ResultItem work(WorkItem workItem) {
+		ResultItem resultItem = new ResultItem();
 
 		try {
 			logger.debug(String.format("Getting %s", workItem.getUri().toString()));
@@ -54,13 +50,13 @@ public class Worker {
 
 			long endTime = System.currentTimeMillis();
 
-			result.setStartTime(startTime);
-			result.setEndTime(endTime);
-			result.setStatusCode(response1.getStatusLine().getStatusCode());
-			if (result.getStatusCode() != 200 ) {
+			resultItem.setStartTime(startTime);
+			resultItem.setEndTime(endTime);
+			resultItem.setStatusCode(response1.getStatusLine().getStatusCode());
+			if (resultItem.getStatusCode() != 200 ) {
 				logger.warn(String.format("Did a request to %s, but got status code %d",
 						workItem.getUri().toString(),
-						result.getStatusCode()));
+						resultItem.getStatusCode()));
 			}
 
 			logger.debug("Finished!");
@@ -70,10 +66,10 @@ public class Worker {
 			workItem.getHttpGet().completed();
 		} catch (IOException e) {
 			logger.error("Could not get content from URL", e);
-			result.markAsFailed();
+			resultItem.markAsFailed();
 		}
 
-		return result;
+		return resultItem;
 	}
 
 	private void extractBody(StringBuilder builder, HttpEntity entity) throws IOException {

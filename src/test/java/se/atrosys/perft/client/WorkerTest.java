@@ -1,6 +1,5 @@
 package se.atrosys.perft.client;
 
-import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import org.apache.http.HttpEntity;
@@ -12,14 +11,12 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import se.atrosys.perft.common.Result;
+import se.atrosys.perft.common.ResultItem;
 import se.atrosys.perft.common.WorkItem;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.util.Locale;
 
 public class WorkerTest {
 	public static final int STATUS_CODE = 200;
@@ -30,7 +27,7 @@ public class WorkerTest {
 
 	private WorkItem workItem;
 	private Worker worker;
-	private Result result;
+	private ResultItem resultItem;
 
 	@BeforeClass
 	public void setupMockedStuff() throws IOException {
@@ -50,22 +47,22 @@ public class WorkerTest {
 		workItem = new WorkItem(URI.create("http://localhost:8080"));
 		worker = new Worker();
 		worker.setHttpClient(httpClient);
-		result = worker.work(workItem);
+		resultItem = worker.work(workItem);
 	}
 
 	@Test
 	public void shouldHaveResults() {
-		Assert.assertNotNull(result);
+		Assert.assertNotNull(resultItem);
 	}
 
 	@Test
 	public void shouldHaveTimeInResults() {
-		Assert.assertNotSame(result.getTime(), 0);
+		Assert.assertNotSame(resultItem.getTime(), 0);
 	}
 
 	@Test
 	public void shouldHaveStatusCodeInResults() {
-		Assert.assertEquals(result.getStatusCode(), STATUS_CODE);
+		Assert.assertEquals(resultItem.getStatusCode(), STATUS_CODE);
 	}
 
 }

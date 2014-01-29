@@ -11,21 +11,54 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.atrosys.perft.common.Operation;
+import se.atrosys.perft.common.ResultItem;
+
+import java.util.List;
 
 public class WorkerClient {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final EventLoopGroup workerGroup;
+	private final String host;
+	private final int port;
 
 	public WorkerClient(String host, int port) {
-		EventLoopGroup workerGroup = new NioEventLoopGroup();
+		this.host = host;
+		this.port = port;
+
+		workerGroup = new NioEventLoopGroup();
+	}
+
+	public void getWork() {
+		try {
+			Bootstrap bootstrap = createBootstrap(workerGroup);
+
+			ChannelFuture channelFuture = bootstrap.connect(host, port).sync();
+			channelFuture.channel().pipeline().writeAndFlush(Operation.GET_WORK) ;
+
+			// Wait until the connection is closed.
+			logger.info("Closing connection");
+			channelFuture.channel().closeFuture().sync();
+			logger.info("Connection closed");
+		} catch (InterruptedException e) {
+			logger.warn("Interrupted!", e);
+		} finally {
+			workerGroup.shutdownGracefully();
+		}
+	}
+
+	public void sendResults(List<ResultItem> resultItems) {
 
 		try {
 			Bootstrap bootstrap = createBootstrap(workerGroup);
 
-			// Start the client.
-			ChannelFuture channelFuture = bootstrap.connect(host, port).sync(); // (5)
+			ChannelFuture channelFuture = bootstrap.connect(host, port).sync();
+			channelFuture.channel().pipeline().writeAndFlush(resultItems);
 
 			// Wait until the connection is closed.
+			logger.info("Closing connection");
 			channelFuture.channel().closeFuture().sync();
+			logger.info("Connection closed");
 		} catch (InterruptedException e) {
 			logger.warn("Interrupted!", e);
 		} finally {
