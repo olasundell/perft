@@ -25,7 +25,7 @@ public class Main {
 //			e.printStackTrace();
 //		}
 
-		List<WorkItem> workItems = new WorkItemListFactory("accesslog").produceWorkItems();
+		List<WorkItem> workItems = new WorkItemListFactory("accesslog2").produceWorkItems();
 		List<Result> results = new ArrayList<Result>();
 
 		results.addAll(new WorkerSpawner().workOnItems(workItems, 100));

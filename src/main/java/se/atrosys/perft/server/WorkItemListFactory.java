@@ -33,7 +33,7 @@ public class WorkItemListFactory {
 			URI uri = URI.create(item.getRequest());
 			if (!uri.isAbsolute()) {
 				// TODO this should be configurable
-				uri = URI.create("http://localhost/liveapi" + uri.toString());
+				uri = URI.create("http://localhost:9000" + uri.toString());
 			}
 			return new WorkItem(uri);
 		}

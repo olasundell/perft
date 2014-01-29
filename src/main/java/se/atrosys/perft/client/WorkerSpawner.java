@@ -31,7 +31,7 @@ public class WorkerSpawner {
 		connectionManager = new PoolingHttpClientConnectionManager();
 		connectionManager.setMaxTotal(200);
 		connectionManager.setDefaultMaxPerRoute(20);
-		HttpHost localhost = new HttpHost("localhost", 80);
+		HttpHost localhost = new HttpHost("localhost", 9000);
 		connectionManager.setMaxPerRoute(new HttpRoute(localhost), 50);
 
 		httpClient = HttpClients.custom()

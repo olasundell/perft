@@ -46,10 +46,8 @@ public class Worker {
 		try {
 			logger.debug(String.format("Getting %s", workItem.getUri().toString()));
 
-			HttpGet httpGet = new HttpGet(workItem.getUri());
-
 			long startTime = System.currentTimeMillis();
-			CloseableHttpResponse response1 = httpClient.execute(httpGet);
+			CloseableHttpResponse response1 = httpClient.execute(workItem.getHttpGet());
 			HttpEntity entity = response1.getEntity();
 
 			extractBody(builder, entity);
@@ -69,7 +67,7 @@ public class Worker {
 			logger.trace(builder.toString());
 
 			response1.close();
-			httpGet.completed();
+			workItem.getHttpGet().completed();
 		} catch (IOException e) {
 			logger.error("Could not get content from URL", e);
 			result.markAsFailed();
