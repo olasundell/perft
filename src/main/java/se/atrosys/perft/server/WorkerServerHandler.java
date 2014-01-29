@@ -1,19 +1,32 @@
 package se.atrosys.perft.server;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.atrosys.perft.common.Operation;
+import se.atrosys.perft.common.WorkerConfig;
+
+import java.util.List;
 
 public class WorkerServerHandler extends ChannelInboundHandlerAdapter {
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final WorkerConfig workerConfig;
+
+	public WorkerServerHandler(WorkerConfig workerConfig) {
+		this.workerConfig = workerConfig;
+	}
+
+	@Override
+	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+
+	}
+
 	@Override
 	public void channelActive(final ChannelHandlerContext context) { // (1)
-		final ByteBuf buffer = context.alloc().buffer(4); // (2)
+		logger.info("Channel active!");
 
-		buffer.writeBytes("foobar".getBytes());
+		final ChannelFuture channelFuture = context.writeAndFlush(workerConfig); // (3)
 
-		final ChannelFuture channelFuture = context.writeAndFlush(buffer); // (3)
 		channelFuture.addListener(new ChannelFutureListener() {
 			@Override
 			public void operationComplete(ChannelFuture future) {
@@ -25,7 +38,7 @@ public class WorkerServerHandler extends ChannelInboundHandlerAdapter {
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-		cause.printStackTrace();
+		logger.error("Error!", cause);
 		ctx.close();
 	}
 }

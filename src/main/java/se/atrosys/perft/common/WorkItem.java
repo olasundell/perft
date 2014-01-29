@@ -2,15 +2,14 @@ package se.atrosys.perft.common;
 
 import org.apache.http.client.methods.HttpGet;
 
+import java.io.Serializable;
 import java.net.URI;
 
-public class WorkItem {
+public class WorkItem implements Serializable {
 	private final URI uri;
-	private final HttpGet httpGet;
 
 	public WorkItem(URI uri) {
 		this.uri = uri;
-		httpGet = new HttpGet(uri);
 	}
 
 	public URI getUri() {
@@ -18,6 +17,6 @@ public class WorkItem {
 	}
 
 	public HttpGet getHttpGet() {
-		return httpGet;
+		return new HttpGet(uri);
 	}
 }

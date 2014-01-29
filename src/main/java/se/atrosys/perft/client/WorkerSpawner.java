@@ -13,6 +13,7 @@ import rx.util.functions.Action0;
 import rx.util.functions.Action1;
 import se.atrosys.perft.common.Result;
 import se.atrosys.perft.common.WorkItem;
+import se.atrosys.perft.common.WorkerConfig;
 import se.atrosys.perft.server.Main;
 import se.atrosys.perft.server.ResultSummarizer;
 
@@ -26,12 +27,14 @@ public class WorkerSpawner {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final PoolingHttpClientConnectionManager connectionManager;
 	private final CloseableHttpClient httpClient;
+	private final WorkerConfig workerConfig;
 
-	public WorkerSpawner() {
+	public WorkerSpawner(WorkerConfig workerConfig) {
+		this.workerConfig = workerConfig;
 		connectionManager = new PoolingHttpClientConnectionManager();
 		connectionManager.setMaxTotal(200);
 		connectionManager.setDefaultMaxPerRoute(20);
-		HttpHost localhost = new HttpHost("localhost", 9000);
+		HttpHost localhost = new HttpHost(workerConfig.getTargetHostname(), workerConfig.getTargetPort());
 		connectionManager.setMaxPerRoute(new HttpRoute(localhost), 50);
 
 		httpClient = HttpClients.custom()
@@ -39,8 +42,8 @@ public class WorkerSpawner {
 				.build();
 	}
 
-	public List<Result> workOnItems(List<WorkItem> workItems, int noOfWorkers) {
-		Scheduler scheduler = Schedulers.executor(Executors.newFixedThreadPool(noOfWorkers));
+	public List<Result> workOnItems() {
+		Scheduler scheduler = Schedulers.executor(Executors.newFixedThreadPool(workerConfig.getNoOfWorkers()));
 		final List<Result> results = new Vector<Result>();
 		final AtomicInteger count = new AtomicInteger(0);
 
@@ -62,34 +65,14 @@ public class WorkerSpawner {
 			@Override
 			public void call() {
 				logger.info("Completed!");
-				new ResultSummarizer().summarize(results);
-				Main.finished = true;
+
+
+//				new ResultSummarizer().summarize(results);
+//				Main.finished = true;
 			}
 		};
 
-		rx.Observable.from(workItems).subscribe(onNext, onError, onComplete, scheduler);
-
-//				doOnEach(new Observer<WorkItem>() {
-//
-//			private final Logger logger = LoggerFactory.getLogger(this.getClass());
-//
-//			@Override
-//			public void onCompleted() {
-//				logger.info("Completed!");
-//				new ResultSummarizer().summarize(results);
-//				Main.finished = true;
-//			}
-//
-//			@Override
-//			public void onError(Throwable e) {
-//				logger.warn("Error!", e);
-//			}
-//
-//			@Override
-//			public void onNext(WorkItem args) {
-//				results.add(new Worker().work(args));
-//			}
-//		});
+		rx.Observable.from(workerConfig.getWorkItems()).subscribe(onNext, onError, onComplete, scheduler);
 
 		return results;
 	}
