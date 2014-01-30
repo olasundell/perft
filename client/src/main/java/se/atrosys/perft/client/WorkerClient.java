@@ -48,7 +48,6 @@ public class WorkerClient {
 	}
 
 	public void sendResults(List<ResultItem> resultItems) {
-
 		try {
 			Bootstrap bootstrap = createBootstrap(workerGroup);
 

@@ -3,12 +3,11 @@ package se.atrosys.perft.server;
 import io.netty.channel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.atrosys.perft.common.ClientToServerRequest;
 import se.atrosys.perft.common.Operation;
 import se.atrosys.perft.common.WorkerConfig;
 
-import java.util.List;
-
-public class GetWorkHandler extends SimpleChannelInboundHandler<Operation> {
+public class GetWorkHandler extends SimpleChannelInboundHandler<ClientToServerRequest> {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final WorkerConfig workerConfig;
 
@@ -17,16 +16,16 @@ public class GetWorkHandler extends SimpleChannelInboundHandler<Operation> {
 	}
 
 	@Override
-	protected void channelRead0(final ChannelHandlerContext context, Operation currentOperation) throws Exception {
-		logger.info("Channel read, with operation " + currentOperation);
+	protected void channelRead0(final ChannelHandlerContext context, ClientToServerRequest request) throws Exception {
+		logger.info("Channel read, with operation " + request);
 
 		logger.info("Acting on operation");
-		switch (currentOperation) {
+		switch (request.getOperation()) {
 			case GET_WORK:
 				sendWorkToClient(context);
 				break;
 			default:
-				logger.error("Unknown error with operation {}", currentOperation);
+				logger.error("Unknown error with operation {}", request.getOperation());
 		}
 	}
 

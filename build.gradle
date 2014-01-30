@@ -1,24 +1,33 @@
-apply plugin: 'java'
+subprojects {
+	apply plugin: 'java'
+		sourceCompatibility = 1.7
 
-repositories {
-    mavenLocal()
-	mavenCentral()
+		repositories {
+			mavenLocal()
+				mavenCentral()
+		}
+
+	dependencies {
+		compile 'io.netty:netty-all:4.0.+'
+			compile 'ch.qos.logback:logback-core:+'
+			compile 'ch.qos.logback:logback-classic:+'
+			compile 'org.slf4j:slf4j-api:+'
+			compile 'org.apache.httpcomponents:httpclient:4.3.+'
+			compile 'joda-time:joda-time:+'
+			compile group:"com.netflix.rxjava", name:"rxjava-core", version:"+"
+			testCompile 'com.googlecode.jmockit:jmockit:+'
+			testCompile 'org.testng:testng:+'
+	}
+
+	test {
+		useTestNG()
+	}
 }
 
-dependencies {
-    compile 'io.netty:netty-all:4.0.+'
-    compile 'ch.qos.logback:logback-core:+'
-    compile 'ch.qos.logback:logback-classic:+'
-    compile 'org.slf4j:slf4j-api:+'
-    compile 'org.apache.httpcomponents:httpclient:4.3.+'
-    compile 'joda-time:joda-time:+'
-    compile group:"com.netflix.rxjava", name:"rxjava-core", version:"+"
-    testCompile 'com.googlecode.jmockit:jmockit:+'
-    testCompile 'org.testng:testng:+'
-}
-
-test {
-	useTestNG()
+configure(subprojects.findAll {it.name != 'common'}) {
+	dependencies {
+		compile project(':common')
+	}
 }
 
 task wrapper(type: Wrapper) {

@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import se.atrosys.perft.common.WorkItem;
 import se.atrosys.perft.common.WorkerConfig;
 
-import java.util.Date;
 import java.util.List;
 
 public class ClientHandler extends SimpleChannelInboundHandler<WorkerConfig> {

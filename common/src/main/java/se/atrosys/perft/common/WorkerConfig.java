@@ -10,6 +10,7 @@ public class WorkerConfig implements Serializable {
 	private String targetHostname;
 	private int targetPort;
 	private String prependToPath;
+	private int workerId;
 
 	public WorkerConfig() {
 		this.workItems = new ArrayList<WorkItem>();
@@ -38,6 +39,14 @@ public class WorkerConfig implements Serializable {
 
 	public String getPrependToPath() {
 		return prependToPath;
+	}
+
+	public int getWorkerId() {
+		return workerId;
+	}
+
+	public void setWorkerId(int workerId) {
+		this.workerId = workerId;
 	}
 
 	public static class WorkerConfigBuilder {
