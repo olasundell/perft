@@ -1,4 +1,4 @@
-package se.atrosys.perft.common.comm;
+package se.atrosys.perft.node.comm;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

@@ -14,14 +14,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Main {
+public class HubMain {
 	public static boolean finished = false;
 	public static Map<Integer, Object> clients = new ConcurrentHashMap<Integer, Object>();
 	public static Map<Integer, List<ResultItem>> results = new ConcurrentHashMap<Integer, List<ResultItem>>();
 	private static AtomicInteger nextId = new AtomicInteger(0);
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		Logger logger = LoggerFactory.getLogger(Main.class);
+		Logger logger = LoggerFactory.getLogger(HubMain.class);
 		WorkerConfig workerConfig = new WorkerConfig.WorkerConfigBuilder()
 				.withNoOfWorkers(50)
 				.withTargetHostname("localhost")

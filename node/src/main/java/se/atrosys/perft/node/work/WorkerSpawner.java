@@ -14,7 +14,7 @@ import rx.util.functions.Action1;
 import se.atrosys.perft.common.ResultItem;
 import se.atrosys.perft.common.WorkItem;
 import se.atrosys.perft.common.WorkerConfig;
-import se.atrosys.perft.common.comm.NodeToHubRequestSender;
+import se.atrosys.perft.node.comm.NodeToHubRequestSender;
 
 import java.util.List;
 import java.util.Vector;

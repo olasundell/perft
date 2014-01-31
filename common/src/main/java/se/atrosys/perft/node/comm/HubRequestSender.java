@@ -1,17 +1,13 @@
-package se.atrosys.perft.common.comm;
+package se.atrosys.perft.node.comm;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.serialization.ClassResolver;
-import io.netty.handler.codec.serialization.ClassResolvers;
-import io.netty.handler.codec.serialization.ObjectDecoder;
-import io.netty.handler.codec.serialization.ObjectEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.atrosys.perft.common.NodeToHubRequest;
+import se.atrosys.perft.common.Request;
 
 public abstract class HubRequestSender {
 	protected final EventLoopGroup workerGroup;
@@ -25,7 +21,7 @@ public abstract class HubRequestSender {
 		this.host = host;
 	}
 
-	protected void sendToHub(NodeToHubRequest msg) {
+	protected void sendToHub(Request msg) {
 		try {
 			Bootstrap bootstrap = createBootstrap(workerGroup);
 

@@ -9,5 +9,5 @@ public enum Operation implements Serializable {
 	NOOP,
 	REGISTER,
 	GET_WORK,
-	SEND_RESULTS
+	START_WORK, SEND_RESULTS
 }

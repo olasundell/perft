@@ -35,6 +35,7 @@ public class HubServer {
 							ch.pipeline()
 									.addLast(new ObjectEncoder())
 									.addLast(new ObjectDecoder(ClassResolvers.softCachingResolver(ClassLoader.getSystemClassLoader())))
+									.addLast(new CliRequestHandler())
 									.addLast(new NodeRequestHandler(workerConfig))
 									.addLast(new SendResultsHandler());
 						}

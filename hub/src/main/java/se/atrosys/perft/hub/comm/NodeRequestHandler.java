@@ -7,7 +7,7 @@ import se.atrosys.perft.common.HubToNodeRequest;
 import se.atrosys.perft.common.NodeToHubRequest;
 import se.atrosys.perft.common.Operation;
 import se.atrosys.perft.common.WorkerConfig;
-import se.atrosys.perft.hub.Main;
+import se.atrosys.perft.hub.HubMain;
 
 public class NodeRequestHandler extends SimpleChannelInboundHandler<NodeToHubRequest> {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -34,8 +34,8 @@ public class NodeRequestHandler extends SimpleChannelInboundHandler<NodeToHubReq
 	}
 
 	private synchronized void registerClient(final ChannelHandlerContext context) {
-		int nextId = Main.getNextId();
-		Main.clients.put(nextId, context.channel());
+		int nextId = HubMain.getNextId();
+		HubMain.clients.put(nextId, context.channel());
 		final ChannelFuture channelFuture = context.writeAndFlush(new HubToNodeRequest(Operation.REGISTER, nextId));
 
 		channelFuture.addListener(new ChannelFutureListener() {
