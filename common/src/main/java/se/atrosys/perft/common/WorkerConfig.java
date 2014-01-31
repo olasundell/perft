@@ -49,6 +49,10 @@ public class WorkerConfig implements Serializable {
 		this.workerId = workerId;
 	}
 
+	public void setWorkItems(List<WorkItem> workItems) {
+		this.workItems = workItems;
+	}
+
 	public static class WorkerConfigBuilder {
 		private final WorkerConfig workerConfig;
 

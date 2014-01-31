@@ -46,7 +46,9 @@ public class NodeRequestHandler extends SimpleChannelInboundHandler<NodeToHubReq
 
 		logger.info("Registering client with id {}", nextId);
 
+		nodeInfo.setId(nextId);
 		HubServer.clients.put(nodeInfo, context);
+
 		context.writeAndFlush(new HubToNodeRequest(Operation.REGISTER, nextId));
 
 	}
