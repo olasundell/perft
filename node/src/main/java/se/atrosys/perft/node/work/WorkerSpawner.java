@@ -63,8 +63,8 @@ public class WorkerSpawner {
 			@Override
 			public void call() {
 				logger.info("Completed, sending resultItems.");
+				// TODO hard-coded server config
 				new NodeToHubRequestSender("localhost", 7800).sendResults(resultItems);
-				System.exit(0);
 			}
 		};
 

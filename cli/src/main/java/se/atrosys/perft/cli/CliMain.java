@@ -6,9 +6,7 @@ public class CliMain {
 			printUsage();
 		}
 
-		if ("run".equals(args[0])) {
-			new CliToHubRequestSender("localhost", 7800).startWork(args[0]);
-		}
+		new CliToHubRequestSender("localhost", 7800).startWork(args[0]);
 	}
 
 	private static void printUsage() {

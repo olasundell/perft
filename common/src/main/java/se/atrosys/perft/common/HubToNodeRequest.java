@@ -1,6 +1,8 @@
 package se.atrosys.perft.common;
 
-public class HubToNodeRequest extends Request {
+import java.io.Serializable;
+
+public class HubToNodeRequest extends Request implements Serializable {
 	private int clientId;
 
 	protected HubToNodeRequest(Operation operation) {

@@ -5,16 +5,21 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.atrosys.perft.common.CliToHubRequest;
 import se.atrosys.perft.common.Operation;
 import se.atrosys.perft.node.comm.HubRequestSender;
 
 public class CliToHubRequestSender extends HubRequestSender {
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	public CliToHubRequestSender(String host, int port) {
 		super(port, host);
 	}
 
 	public void startWork(String filename) {
+		logger.info("Sending access log filename to hub, which will start work");
 		sendToHub(new CliToHubRequest(Operation.START_WORK, filename));
 	}
 

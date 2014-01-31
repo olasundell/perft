@@ -3,10 +3,7 @@ package se.atrosys.perft.hub.comm;
 import io.netty.channel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.atrosys.perft.common.HubToNodeRequest;
-import se.atrosys.perft.common.NodeToHubRequest;
-import se.atrosys.perft.common.Operation;
-import se.atrosys.perft.common.WorkerConfig;
+import se.atrosys.perft.common.*;
 import se.atrosys.perft.hub.HubMain;
 
 public class NodeRequestHandler extends SimpleChannelInboundHandler<NodeToHubRequest> {
@@ -19,7 +16,7 @@ public class NodeRequestHandler extends SimpleChannelInboundHandler<NodeToHubReq
 
 	@Override
 	protected void channelRead0(final ChannelHandlerContext context, NodeToHubRequest request) throws Exception {
-		logger.info("Channel read, with operation " + request);
+		logger.info("Channel read, with operation " + request.getOperation());
 
 		logger.info("Acting on operation");
 		switch (request.getOperation()) {
@@ -27,40 +24,61 @@ public class NodeRequestHandler extends SimpleChannelInboundHandler<NodeToHubReq
 				sendWorkToClient(context);
 				break;
 			case REGISTER:
-				registerClient(context);
+				registerClient(request.getNodeInfo(), context);
+				break;
+			case SEND_RESULTS:
+				receiveResults(request);
+				context.channel().parent().close();
+				break;
 			default:
-				logger.error("Unknown error with operation {}", request.getOperation());
+				logger.error("Unknown operation {}", request.getOperation());
 		}
 	}
 
-	private synchronized void registerClient(final ChannelHandlerContext context) {
-		int nextId = HubMain.getNextId();
-		HubMain.clients.put(nextId, context.channel());
-		final ChannelFuture channelFuture = context.writeAndFlush(new HubToNodeRequest(Operation.REGISTER, nextId));
+	private void receiveResults(NodeToHubRequest request) {
+		logger.info("Results size {}", request.getResults().size());
+		HubMain.results.put(request.getNodeInfo(), request.getResults());
+		HubMain.finished = true;
+	}
 
-		channelFuture.addListener(new ChannelFutureListener() {
-			@Override
-			public void operationComplete(ChannelFuture future) {
-				assert channelFuture == future;
-				context.close();
-			}
-		});
+	private synchronized void registerClient(final NodeInfo nodeInfo, ChannelHandlerContext context) {
+		int nextId = HubMain.getNextId();
+
+		logger.info("Registering client with id {}", nextId);
+
+		HubServer.clients.put(nodeInfo, context);
+		context.writeAndFlush(new HubToNodeRequest(Operation.REGISTER, nextId));
+
+//		channelFuture.addListener(new ChannelFutureListener() {
+//			@Override
+//			public void operationComplete(ChannelFuture future) {
+//				assert channelFuture == future;
+//				context.close();
+//			}
+//		});
 	}
 
 	private void sendWorkToClient(final ChannelHandlerContext context) {
-		final ChannelFuture channelFuture = context.writeAndFlush(workerConfig);
+//		final ChannelFuture channelFuture = context.pipeline().writeAndFlush(workerConfig);
+		context.pipeline().writeAndFlush(workerConfig);
 
-		channelFuture.addListener(new ChannelFutureListener() {
-			@Override
-			public void operationComplete(ChannelFuture future) {
-				assert channelFuture == future;
-				context.close();
-			}
-		});
+//		channelFuture.addListener(new ChannelFutureListener() {
+//			@Override
+//			public void operationComplete(ChannelFuture future) {
+//				assert channelFuture == future;
+//				context.close();
+//			}
+//		});
 	}
 
 	@Override
 	public void channelActive(final ChannelHandlerContext context) {
+		try {
+			super.channelActive(context);
+		} catch (Exception e) {
+			logger.error("Error occurred!", e);
+		}
+
 		logger.info("Channel active!");
 
 		context.read();

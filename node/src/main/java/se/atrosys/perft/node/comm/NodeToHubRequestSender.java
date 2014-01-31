@@ -5,28 +5,35 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.atrosys.perft.common.NodeToHubRequest;
 import se.atrosys.perft.common.Operation;
 import se.atrosys.perft.common.ResultItem;
+import se.atrosys.perft.node.NodeMain;
 
 import java.util.List;
 
 public class NodeToHubRequestSender extends HubRequestSender {
+	Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public NodeToHubRequestSender(String host, int port) {
 		super(port, host);
 	}
 
 	public void getWork() {
-		sendToHub(new NodeToHubRequest(Operation.GET_WORK, NodeMain.getId()));
+		sendToHub(new NodeToHubRequest(Operation.GET_WORK, NodeMain.getNodeInfo()));
 	}
 
 	public void sendResults(List<ResultItem> resultItems) {
-		sendToHub(new NodeToHubRequest(Operation.SEND_RESULTS, NodeMain.getId()));
+		logger.info("Sending results...");
+		sendToHub(new NodeToHubRequest(Operation.SEND_RESULTS, NodeMain.getNodeInfo()).addResults(resultItems));
+		logger.info("Results sent.");
 	}
 
 	public void register() {
-		sendToHub(new NodeToHubRequest(Operation.REGISTER, -1));
+		logger.info("Sending register request...");
+		sendToHub(new NodeToHubRequest(Operation.REGISTER, NodeMain.getNodeInfo()));
 	}
 
 	@Override
@@ -37,7 +44,9 @@ public class NodeToHubRequestSender extends HubRequestSender {
 				ch.pipeline()
 						.addLast(new ObjectEncoder())
 						.addLast(new ObjectDecoder(ClassResolvers.softCachingResolver(ClassLoader.getSystemClassLoader())))
-						.addLast(new WorkerConfigHandler());
+						.addLast(new HubRequestHandler())
+						.addLast(new WorkerConfigHandler())
+						.addLast(new ObjectHandler());
 			}
 		};
 	}

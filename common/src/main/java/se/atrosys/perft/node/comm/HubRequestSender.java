@@ -13,37 +13,58 @@ public abstract class HubRequestSender {
 	protected final EventLoopGroup workerGroup;
 	protected final String host;
 	protected final int port;
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	private Logger logger = LoggerFactory.getLogger(HubRequestSender.class);
+	private ChannelFuture channelFuture;
+	private boolean finished = false;
+	private final Bootstrap bootstrap;
 
 	public HubRequestSender(int port, String host) {
-		workerGroup = new NioEventLoopGroup();
 		this.port = port;
 		this.host = host;
+
+		workerGroup = new NioEventLoopGroup();
+		bootstrap = createBootstrap(workerGroup);
+
+		refreshChannelFuture();
 	}
 
-	protected void sendToHub(Request msg) {
+	private void refreshChannelFuture() {
+		logger.info("Refreshing channel future.");
 		try {
-			Bootstrap bootstrap = createBootstrap(workerGroup);
+			channelFuture = bootstrap.connect(host, port).sync();
+		} catch (InterruptedException e) {
+			logger.warn("Interrupted!", e);
+		}
+	}
 
-			ChannelFuture channelFuture = bootstrap.connect(host, port).sync();
-			channelFuture.channel().pipeline().writeAndFlush(msg) ;
+	public void exit() {
+		// Wait until the connection is closed.
+		logger.info("Closing connection");
 
-			// Wait until the connection is closed.
-			logger.info("Closing connection");
+		try {
 			channelFuture.channel().closeFuture().sync();
-			logger.info("Connection closed");
 		} catch (InterruptedException e) {
 			logger.warn("Interrupted!", e);
 		} finally {
 			workerGroup.shutdownGracefully();
 		}
+
+		logger.info("Connection closed");
+	}
+
+	protected void sendToHub(Request msg) {
+		if (channelFuture.isCancelled()) {
+			refreshChannelFuture();
+		}
+
+		channelFuture.channel().pipeline().writeAndFlush(msg);
 	}
 
 	private Bootstrap createBootstrap(EventLoopGroup workerGroup) {
-		Bootstrap b = new Bootstrap(); // (1)
-		b.group(workerGroup); // (2)
-		b.channel(NioSocketChannel.class); // (3)
-		b.option(ChannelOption.SO_KEEPALIVE, true); // (4)
+		Bootstrap b = new Bootstrap();
+		b.group(workerGroup);
+		b.channel(NioSocketChannel.class);
+		b.option(ChannelOption.SO_KEEPALIVE, true);
 		b.handler(createChannelInitializer());
 		return b;
 	}

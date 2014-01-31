@@ -2,6 +2,7 @@ package se.atrosys.perft.hub;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.atrosys.perft.common.NodeInfo;
 import se.atrosys.perft.common.ResultItem;
 import se.atrosys.perft.common.WorkItem;
 import se.atrosys.perft.common.WorkerConfig;
@@ -9,6 +10,7 @@ import se.atrosys.perft.hub.comm.HubServer;
 import se.atrosys.perft.hub.workproduction.WorkItemListFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,8 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class HubMain {
 	public static boolean finished = false;
-	public static Map<Integer, Object> clients = new ConcurrentHashMap<Integer, Object>();
-	public static Map<Integer, List<ResultItem>> results = new ConcurrentHashMap<Integer, List<ResultItem>>();
+	public static Map<NodeInfo, List<ResultItem>> results = new ConcurrentHashMap<NodeInfo, List<ResultItem>>();
 	private static AtomicInteger nextId = new AtomicInteger(0);
 
 	public static void main(String[] args) throws IOException, InterruptedException {
@@ -51,7 +52,13 @@ public class HubMain {
 //			Thread.sleep(500);
 //		}
 
-		new ResultSummarizer().summarize(results.get(0));
+		List<ResultItem> totalResults = new ArrayList<ResultItem>();
+
+		for (List<ResultItem> list: results.values()) {
+			totalResults.addAll(list);
+		}
+
+		new ResultSummarizer().summarize(totalResults);
 	}
 
 	public static int getNextId() {

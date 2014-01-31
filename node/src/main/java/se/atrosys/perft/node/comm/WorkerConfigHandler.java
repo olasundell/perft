@@ -21,7 +21,7 @@ public class WorkerConfigHandler extends SimpleChannelInboundHandler<WorkerConfi
 
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, WorkerConfig workerConfig) throws Exception {
-		logger.info("Channel read.");
+		logger.info("Received a WorkerConfig");
 		List<WorkItem> workItems = workerConfig.getWorkItems();
 
 		if (workItems != null) {

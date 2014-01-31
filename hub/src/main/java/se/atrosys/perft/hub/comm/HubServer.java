@@ -10,10 +10,14 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.atrosys.perft.common.NodeInfo;
 import se.atrosys.perft.common.WorkerConfig;
 
-public class HubServer {
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+public class HubServer {
+	public static ConcurrentHashMap<NodeInfo, ChannelHandlerContext> clients = new ConcurrentHashMap<NodeInfo, ChannelHandlerContext>();
 	private int port;
 	private WorkerConfig workerConfig;
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -35,9 +39,8 @@ public class HubServer {
 							ch.pipeline()
 									.addLast(new ObjectEncoder())
 									.addLast(new ObjectDecoder(ClassResolvers.softCachingResolver(ClassLoader.getSystemClassLoader())))
-									.addLast(new CliRequestHandler())
-									.addLast(new NodeRequestHandler(workerConfig))
-									.addLast(new SendResultsHandler());
+									.addLast(new CliRequestHandler(HubServer.this))
+									.addLast(new NodeRequestHandler(workerConfig));
 						}
 					})
 					.option(ChannelOption.SO_BACKLOG, 128)          // (5)
@@ -54,6 +57,19 @@ public class HubServer {
 		} finally {
 			workerGroup.shutdownGracefully();
 			bossGroup.shutdownGracefully();
+		}
+	}
+
+	public void sendWork() {
+		logger.info("Sending work to all clients, {} in total", clients.size());
+
+		for (Map.Entry<NodeInfo, ChannelHandlerContext> entry: clients.entrySet()) {
+			logger.info("Sending work to client {}", entry.getKey().getId());
+
+			ChannelHandlerContext context = entry.getValue();
+			context.pipeline().writeAndFlush(workerConfig);
+
+			logger.info("Work sent.");
 		}
 	}
 
