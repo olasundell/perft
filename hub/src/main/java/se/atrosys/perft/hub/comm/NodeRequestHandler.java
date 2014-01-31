@@ -49,26 +49,10 @@ public class NodeRequestHandler extends SimpleChannelInboundHandler<NodeToHubReq
 		HubServer.clients.put(nodeInfo, context);
 		context.writeAndFlush(new HubToNodeRequest(Operation.REGISTER, nextId));
 
-//		channelFuture.addListener(new ChannelFutureListener() {
-//			@Override
-//			public void operationComplete(ChannelFuture future) {
-//				assert channelFuture == future;
-//				context.close();
-//			}
-//		});
 	}
 
 	private void sendWorkToClient(final ChannelHandlerContext context) {
-//		final ChannelFuture channelFuture = context.pipeline().writeAndFlush(workerConfig);
 		context.pipeline().writeAndFlush(workerConfig);
-
-//		channelFuture.addListener(new ChannelFutureListener() {
-//			@Override
-//			public void operationComplete(ChannelFuture future) {
-//				assert channelFuture == future;
-//				context.close();
-//			}
-//		});
 	}
 
 	@Override

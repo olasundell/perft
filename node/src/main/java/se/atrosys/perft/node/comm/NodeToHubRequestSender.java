@@ -50,4 +50,8 @@ public class NodeToHubRequestSender extends HubRequestSender {
 			}
 		};
 	}
+
+	public void close() {
+
+	}
 }

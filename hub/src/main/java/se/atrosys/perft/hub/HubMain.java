@@ -45,13 +45,6 @@ public class HubMain {
 			logger.error("Error!", e);
 		}
 
-//		int count = 0;
-//
-//		while (!finished && count++ < 40) {
-//			logger.info("Waiting for results.");
-//			Thread.sleep(500);
-//		}
-
 		List<ResultItem> totalResults = new ArrayList<ResultItem>();
 
 		for (List<ResultItem> list: results.values()) {
