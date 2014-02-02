@@ -1,7 +1,9 @@
 package se.atrosys.perft.node.work.worker;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +14,20 @@ public abstract class AbstractWorker implements Worker {
 	protected final StringBuilder builder = new StringBuilder();
 	protected CloseableHttpClient httpClient;
 	Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	public AbstractWorker(CloseableHttpClient httpClient) {
+		this.httpClient = httpClient;
+	}
+
+	public AbstractWorker() {
+		httpClient = HttpClients.createDefault();
+	}
+
+	public AbstractWorker(HttpClientConnectionManager manager) {
+		httpClient = HttpClients.custom()
+				.setConnectionManager(manager)
+				.build();
+	}
 
 	@Override
 	public void setHttpClient(CloseableHttpClient httpClient) {

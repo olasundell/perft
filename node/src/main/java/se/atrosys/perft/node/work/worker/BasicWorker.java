@@ -2,9 +2,7 @@ package se.atrosys.perft.node.work.worker;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.conn.HttpClientConnectionManager;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import se.atrosys.perft.common.work.ResultItem;
 import se.atrosys.perft.common.work.WorkItem;
 
@@ -12,18 +10,12 @@ import java.io.IOException;
 
 public class BasicWorker extends AbstractWorker {
 
-	public BasicWorker(CloseableHttpClient httpClient) {
-		this.httpClient = httpClient;
-	}
-
-	public BasicWorker(HttpClientConnectionManager manager) {
-		httpClient = HttpClients.custom()
-				.setConnectionManager(manager)
-				.build();
+	public BasicWorker(PoolingHttpClientConnectionManager connectionManager) {
+		super(connectionManager);
 	}
 
 	public BasicWorker() {
-		httpClient = HttpClients.createDefault();
+		super();
 	}
 
 	@Override
@@ -61,6 +53,16 @@ public class BasicWorker extends AbstractWorker {
 		}
 
 		return resultItem;
+	}
+
+	@Override
+	public WorkerFactory getFactoryInstance() {
+		return new WorkerFactory() {
+			@Override
+			public Worker createWorker(PoolingHttpClientConnectionManager connectionManager) {
+				return new BasicWorker(connectionManager);
+			}
+		};
 	}
 
 }
