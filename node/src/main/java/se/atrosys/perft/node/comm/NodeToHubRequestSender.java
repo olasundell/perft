@@ -7,9 +7,10 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.atrosys.perft.common.NodeToHubRequest;
-import se.atrosys.perft.common.Operation;
-import se.atrosys.perft.common.ResultItem;
+import se.atrosys.perft.common.comm.NodeToHubRequest;
+import se.atrosys.perft.common.comm.Operation;
+import se.atrosys.perft.common.work.ResultItem;
+import se.atrosys.perft.common.comm.HubRequestSender;
 import se.atrosys.perft.node.NodeMain;
 
 import java.util.List;

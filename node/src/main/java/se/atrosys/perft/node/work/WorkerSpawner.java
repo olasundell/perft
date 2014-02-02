@@ -11,10 +11,11 @@ import rx.*;
 import rx.schedulers.Schedulers;
 import rx.util.functions.Action0;
 import rx.util.functions.Action1;
-import se.atrosys.perft.common.ResultItem;
-import se.atrosys.perft.common.WorkItem;
-import se.atrosys.perft.common.WorkerConfig;
+import se.atrosys.perft.common.work.ResultItem;
+import se.atrosys.perft.common.work.WorkItem;
+import se.atrosys.perft.common.work.config.WorkerConfig;
 import se.atrosys.perft.node.comm.NodeToHubRequestSender;
+import se.atrosys.perft.node.work.worker.BasicWorker;
 
 import java.util.List;
 import java.util.Vector;
@@ -55,7 +56,7 @@ public class WorkerSpawner {
 		Action1<WorkItem> onNext = new Action1<WorkItem>() {
 			@Override
 			public void call(WorkItem workItem) {
-				resultItems.add(new Worker(connectionManager).work(workItem));
+				resultItems.add(new BasicWorker(connectionManager).work(workItem));
 			}
 		};
 

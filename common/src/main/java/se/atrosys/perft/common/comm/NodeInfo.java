@@ -1,4 +1,4 @@
-package se.atrosys.perft.common;
+package se.atrosys.perft.common.comm;
 
 import java.io.Serializable;
 

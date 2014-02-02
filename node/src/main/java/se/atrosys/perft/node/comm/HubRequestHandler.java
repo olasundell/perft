@@ -4,8 +4,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.atrosys.perft.common.HubToNodeRequest;
-import se.atrosys.perft.common.Operation;
+import se.atrosys.perft.common.comm.HubToNodeRequest;
+import se.atrosys.perft.common.comm.Operation;
 import se.atrosys.perft.node.NodeMain;
 
 public class HubRequestHandler extends SimpleChannelInboundHandler<HubToNodeRequest> {
@@ -23,8 +23,5 @@ public class HubRequestHandler extends SimpleChannelInboundHandler<HubToNodeRequ
 			logger.info("Got registry information, id {}", msg.getClientId());
 			NodeMain.setId(msg.getClientId());
 		}
-
-		// block for further operations. Ugly.
-//		ctx.read();
 	}
 }

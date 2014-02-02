@@ -1,7 +1,7 @@
 package se.atrosys.perft.hub.workproduction;
 
-import se.atrosys.perft.common.WorkItem;
-import se.atrosys.perft.common.WorkerConfig;
+import se.atrosys.perft.common.work.WorkItem;
+import se.atrosys.perft.common.work.config.WorkerConfig;
 
 import java.io.IOException;
 import java.net.URI;

@@ -2,10 +2,10 @@ package se.atrosys.perft.hub;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.atrosys.perft.common.NodeInfo;
-import se.atrosys.perft.common.ResultItem;
-import se.atrosys.perft.common.WorkItem;
-import se.atrosys.perft.common.WorkerConfig;
+import se.atrosys.perft.common.comm.NodeInfo;
+import se.atrosys.perft.common.work.ResultItem;
+import se.atrosys.perft.common.work.WorkItem;
+import se.atrosys.perft.common.work.config.WorkerConfig;
 import se.atrosys.perft.hub.comm.HubServer;
 import se.atrosys.perft.hub.workproduction.WorkItemListFactory;
 
@@ -16,6 +16,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+// TODO spider/monkey
+// TODO picky spider/monkey
+// TODO true spider
 public class HubMain {
 	public static boolean finished = false;
 	public static Map<NodeInfo, List<ResultItem>> results = new ConcurrentHashMap<NodeInfo, List<ResultItem>>();
@@ -23,14 +26,14 @@ public class HubMain {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		Logger logger = LoggerFactory.getLogger(HubMain.class);
-		WorkerConfig workerConfig = new WorkerConfig.WorkerConfigBuilder()
-				.withNoOfWorkers(50)
-				.withTargetHostname("localhost")
-				.withTargetPort(80)
-				.withPrependToPath("/liveapi")
+		WorkerConfig workerConfig = new WorkerConfig.Builder()
+				.noOfWorkers(50)
+				.targetHostname("localhost")
+				.targetPort(80)
+				.prependToPath("/liveapi")
 				.build();
 
-		List<WorkItem> workItems = new WorkItemListFactory().produceWorkItems("accesslog", workerConfig);
+		List<WorkItem> workItems = new WorkItemListFactory().produceWorkItems("accesslog2", workerConfig);
 		workerConfig.addWorkItems(workItems);
 
 		int port;
@@ -56,5 +59,12 @@ public class HubMain {
 
 	public static int getNextId() {
 		return nextId.getAndIncrement();
+	}
+
+	public static boolean putResults(NodeInfo nodeInfo, List<ResultItem> resultList) {
+		results.put(nodeInfo, resultList);
+
+		// TODO a REALLY ugly way of saying "shut down!".
+		return results.size() == nextId.get();
 	}
 }

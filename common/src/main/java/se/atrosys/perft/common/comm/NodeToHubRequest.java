@@ -1,4 +1,6 @@
-package se.atrosys.perft.common;
+package se.atrosys.perft.common.comm;
+
+import se.atrosys.perft.common.work.ResultItem;
 
 import java.io.Serializable;
 import java.util.ArrayList;

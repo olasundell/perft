@@ -10,9 +10,9 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.atrosys.perft.common.NodeInfo;
-import se.atrosys.perft.common.WorkItem;
-import se.atrosys.perft.common.WorkerConfig;
+import se.atrosys.perft.common.comm.NodeInfo;
+import se.atrosys.perft.common.work.WorkItem;
+import se.atrosys.perft.common.work.config.WorkerConfig;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

@@ -3,8 +3,8 @@ package se.atrosys.perft.hub;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import se.atrosys.perft.common.WorkItem;
-import se.atrosys.perft.common.WorkerConfig;
+import se.atrosys.perft.common.work.WorkItem;
+import se.atrosys.perft.common.work.config.WorkerConfig;
 import se.atrosys.perft.hub.workproduction.AccessLogConverter;
 import se.atrosys.perft.hub.workproduction.WorkItemListFactory;
 
@@ -23,10 +23,10 @@ public class WorkItemListFactoryTest {
 	@BeforeMethod
 	public void setUp() throws Exception {
 		factory = new WorkItemListFactory();
-		workerConfig = new WorkerConfig.WorkerConfigBuilder()
-				.withTargetHostname("localhost")
-				.withTargetPort(9000)
-				.withPrependToPath(PREPEND_TO_PATH)
+		workerConfig = new WorkerConfig.Builder()
+				.targetHostname("localhost")
+				.targetPort(9000)
+				.prependToPath(PREPEND_TO_PATH)
 				.build();
 	}
 

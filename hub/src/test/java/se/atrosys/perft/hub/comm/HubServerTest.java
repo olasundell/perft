@@ -3,7 +3,7 @@ package se.atrosys.perft.hub.comm;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import se.atrosys.perft.common.WorkItem;
+import se.atrosys.perft.common.work.WorkItem;
 
 import java.util.Collections;
 import java.util.List;

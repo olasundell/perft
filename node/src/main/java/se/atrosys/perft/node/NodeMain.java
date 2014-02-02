@@ -2,7 +2,7 @@ package se.atrosys.perft.node;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.atrosys.perft.common.NodeInfo;
+import se.atrosys.perft.common.comm.NodeInfo;
 import se.atrosys.perft.node.comm.NodeListener;
 import se.atrosys.perft.node.comm.NodeToHubRequestSender;
 

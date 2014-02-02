@@ -1,13 +1,10 @@
 package se.atrosys.perft.hub.comm;
 
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInitializer;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.socket.SocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.atrosys.perft.common.CliToHubRequest;
+import se.atrosys.perft.common.comm.CliToHubRequest;
 
 public class CliRequestHandler extends SimpleChannelInboundHandler<CliToHubRequest> {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());

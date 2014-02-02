@@ -7,9 +7,9 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.atrosys.perft.common.CliToHubRequest;
-import se.atrosys.perft.common.Operation;
-import se.atrosys.perft.node.comm.HubRequestSender;
+import se.atrosys.perft.common.comm.CliToHubRequest;
+import se.atrosys.perft.common.comm.Operation;
+import se.atrosys.perft.common.comm.HubRequestSender;
 
 public class CliToHubRequestSender extends HubRequestSender {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());

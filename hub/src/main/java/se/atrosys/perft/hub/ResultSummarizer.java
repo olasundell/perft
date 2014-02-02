@@ -2,7 +2,7 @@ package se.atrosys.perft.hub;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.atrosys.perft.common.ResultItem;
+import se.atrosys.perft.common.work.ResultItem;
 
 import java.util.List;
 

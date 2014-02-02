@@ -1,6 +1,7 @@
-package se.atrosys.perft.common;
+package se.atrosys.perft.common.work;
 
 import java.io.Serializable;
+import java.net.URI;
 
 public class ResultItem implements Serializable {
 	private int statusCode;

@@ -3,7 +3,11 @@ package se.atrosys.perft.hub.comm;
 import io.netty.channel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.atrosys.perft.common.*;
+import se.atrosys.perft.common.comm.HubToNodeRequest;
+import se.atrosys.perft.common.comm.NodeInfo;
+import se.atrosys.perft.common.comm.NodeToHubRequest;
+import se.atrosys.perft.common.comm.Operation;
+import se.atrosys.perft.common.work.config.WorkerConfig;
 import se.atrosys.perft.hub.HubMain;
 
 public class NodeRequestHandler extends SimpleChannelInboundHandler<NodeToHubRequest> {
@@ -27,18 +31,19 @@ public class NodeRequestHandler extends SimpleChannelInboundHandler<NodeToHubReq
 				registerClient(request.getNodeInfo(), context);
 				break;
 			case SEND_RESULTS:
-				receiveResults(request);
-				context.channel().parent().close();
+				if (receiveResults(request)) {
+					context.channel().parent().close();
+				}
+
 				break;
 			default:
 				logger.error("Unknown operation {}", request.getOperation());
 		}
 	}
 
-	private void receiveResults(NodeToHubRequest request) {
+	private boolean receiveResults(NodeToHubRequest request) {
 		logger.info("Results size {}", request.getResults().size());
-		HubMain.results.put(request.getNodeInfo(), request.getResults());
-		HubMain.finished = true;
+		return HubMain.putResults(request.getNodeInfo(), request.getResults());
 	}
 
 	private synchronized void registerClient(final NodeInfo nodeInfo, ChannelHandlerContext context) {

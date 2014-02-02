@@ -11,8 +11,10 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import se.atrosys.perft.common.ResultItem;
-import se.atrosys.perft.common.WorkItem;
+import se.atrosys.perft.common.work.ResultItem;
+import se.atrosys.perft.common.work.WorkItem;
+import se.atrosys.perft.node.work.worker.BasicWorker;
+import se.atrosys.perft.node.work.worker.Worker;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -45,7 +47,7 @@ public class WorkerTest {
 		}};
 
 		workItem = new WorkItem(URI.create("http://localhost:8080"));
-		worker = new Worker();
+		worker = new BasicWorker();
 		worker.setHttpClient(httpClient);
 		resultItem = worker.work(workItem);
 	}

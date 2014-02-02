@@ -1,4 +1,4 @@
-package se.atrosys.perft.node.comm;
+package se.atrosys.perft.common.comm;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -7,7 +7,6 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.atrosys.perft.common.Request;
 
 public abstract class HubRequestSender {
 	protected final EventLoopGroup workerGroup;

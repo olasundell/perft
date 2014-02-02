@@ -5,8 +5,8 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.atrosys.perft.node.work.WorkerSpawner;
-import se.atrosys.perft.common.WorkItem;
-import se.atrosys.perft.common.WorkerConfig;
+import se.atrosys.perft.common.work.WorkItem;
+import se.atrosys.perft.common.work.config.WorkerConfig;
 
 import java.util.List;
 
@@ -31,6 +31,9 @@ public class WorkerConfigHandler extends SimpleChannelInboundHandler<WorkerConfi
 			}
 		}
 
+		for (WorkItem item: workItems) {
+			item.prepBeforeRun();
+		}
 
 		new WorkerSpawner(workerConfig).workOnItems();
 	}

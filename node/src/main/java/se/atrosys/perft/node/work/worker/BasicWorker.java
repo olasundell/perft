@@ -1,41 +1,32 @@
-package se.atrosys.perft.node.work;
+package se.atrosys.perft.node.work.worker;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import se.atrosys.perft.common.ResultItem;
-import se.atrosys.perft.common.WorkItem;
+import se.atrosys.perft.common.work.ResultItem;
+import se.atrosys.perft.common.work.WorkItem;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 
-public class Worker {
-	Logger logger = LoggerFactory.getLogger(this.getClass());
-	private final StringBuilder builder = new StringBuilder();
-	private CloseableHttpClient httpClient;
+public class BasicWorker extends AbstractWorker {
 
-	public Worker(CloseableHttpClient httpClient) {
+	public BasicWorker(CloseableHttpClient httpClient) {
 		this.httpClient = httpClient;
 	}
 
-	public Worker(HttpClientConnectionManager manager) {
+	public BasicWorker(HttpClientConnectionManager manager) {
 		httpClient = HttpClients.custom()
 				.setConnectionManager(manager)
 				.build();
 	}
 
-	public Worker() {
+	public BasicWorker() {
 		httpClient = HttpClients.createDefault();
 	}
 
-	public void setHttpClient(CloseableHttpClient httpClient) {
-		this.httpClient = httpClient;
-	}
-
+	@Override
 	public ResultItem work(WorkItem workItem) {
 		ResultItem resultItem = new ResultItem();
 
@@ -72,15 +63,4 @@ public class Worker {
 		return resultItem;
 	}
 
-	private void extractBody(StringBuilder builder, HttpEntity entity) throws IOException {
-		InputStreamReader in = new InputStreamReader(entity.getContent());
-
-		int str;
-		char buf[] = new char[1024];
-
-		while ( (str = in.read(buf)) != -1) {
-			builder.append(buf, 0, str);
-		}
-		in.close();
-	}
 }
