@@ -9,6 +9,7 @@ subprojects {
 	}
 
 	dependencies {
+        compile 'org.jsoup:jsoup:+'
 		compile 'io.netty:netty-all:4.0.+'
 		compile 'ch.qos.logback:logback-core:+'
 		compile 'ch.qos.logback:logback-classic:+'

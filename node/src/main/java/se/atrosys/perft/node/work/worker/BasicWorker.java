@@ -18,51 +18,15 @@ public class BasicWorker extends AbstractWorker {
 		super();
 	}
 
-	@Override
-	public ResultItem work(WorkItem workItem) {
-		ResultItem resultItem = new ResultItem();
-
-		try {
-			logger.debug(String.format("Getting %s", workItem.getUri().toString()));
-
-			long startTime = System.currentTimeMillis();
-			CloseableHttpResponse response1 = httpClient.execute(workItem.getHttpGet());
-			HttpEntity entity = response1.getEntity();
-
-			extractBody(builder, entity);
-
-			long endTime = System.currentTimeMillis();
-
-			resultItem.setStartTime(startTime);
-			resultItem.setEndTime(endTime);
-			resultItem.setStatusCode(response1.getStatusLine().getStatusCode());
-			if (resultItem.getStatusCode() != 200 ) {
-				logger.warn(String.format("Did a request to %s, but got status code %d",
-						workItem.getUri().toString(),
-						resultItem.getStatusCode()));
-			}
-
-			logger.debug("Finished!");
-			logger.trace(builder.toString());
-
-			response1.close();
-			workItem.getHttpGet().completed();
-		} catch (IOException e) {
-			logger.error("Could not get content from URL", e);
-			resultItem.markAsFailed();
-		}
-
-		return resultItem;
-	}
+	/**
+	 * In the Basic Worker case, this does nothing.
+	 * @param builder
+	 * @param resultItem
+	 */
 
 	@Override
-	public WorkerFactory getFactoryInstance() {
-		return new WorkerFactory() {
-			@Override
-			public Worker createWorker(PoolingHttpClientConnectionManager connectionManager) {
-				return new BasicWorker(connectionManager);
-			}
-		};
+	protected void doActualWork(StringBuilder builder, ResultItem resultItem) {
+
 	}
 
 }

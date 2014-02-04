@@ -8,5 +8,4 @@ public interface Worker {
 	void setHttpClient(CloseableHttpClient httpClient);
 
 	ResultItem work(WorkItem workItem);
-	WorkerFactory getFactoryInstance();
 }

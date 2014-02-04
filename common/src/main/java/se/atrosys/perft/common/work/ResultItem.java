@@ -9,8 +9,18 @@ public class ResultItem implements Serializable {
 	private long startTime;
 	private boolean failed;
 
+	private URI nextUri;
+
 	public long getTime() {
 		return endTime - startTime;
+	}
+
+	public URI getNextUri() {
+		return nextUri;
+	}
+
+	public void setNextUri(URI nextUri) {
+		this.nextUri = nextUri;
 	}
 
 	public int getStatusCode() {
